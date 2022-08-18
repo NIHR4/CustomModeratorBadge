@@ -1,3 +1,6 @@
 [submodule "deps/matdash"]
 	path = deps/matdash
 	url = https://github.com/matcool/mat-dash/
+[submodule "deps/cocos-headers"]
+	path = deps/cocos-headers
+	url = https://github.com/HJfod/cocos-headers
