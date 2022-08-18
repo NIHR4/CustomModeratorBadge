@@ -1,0 +1,3 @@
+[submodule "deps/matdash"]
+	path = deps/matdash
+	url = https://github.com/matcool/mat-dash/
