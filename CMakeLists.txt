@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.0.0)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(ProfileBadges VERSION 0.1.0)
+
+#Packages
+find_package(minhook CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(xxHash CONFIG REQUIRED)
+
+file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
+
+#add_library(ProfileBadges ${SOURCE_FILES})
+add_executable(ProfileBadges ${SOURCE_FILES})
+
+#Linking
+target_link_libraries(ProfileBadges PRIVATE 
+    minhook::minhook
+    spdlog::spdlog spdlog::spdlog_header_only
+    xxHash::xxhash
+)
