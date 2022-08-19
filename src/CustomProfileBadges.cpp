@@ -54,7 +54,7 @@ void CustomBadgeManager::removeAllSpriteMappings(){
 std::string CustomBadgeManager::convertIdToSpriteName(int badgeId){
     try{
         std::lock_guard<std::mutex> guard(gMutex);
-        _idToSpriteDict.at(badgeId);
+        return _idToSpriteDict.at(badgeId);
     }catch(const std::out_of_range& ex){
         spdlog::error("Out of bounds exception. badgeID={} hasn't been mapped to any sprites. Exception details: {}", badgeId, ex.what());
         throw ex;
@@ -73,7 +73,7 @@ void CustomBadgeManager::setDebugMode(bool debugEnabled){
 
 
 
-//CTOR Code: Setup logger
+//CTOR Code: Setup logger and hooks
 CustomBadgeManager::CustomBadgeManager(){
     std::vector<spdlog::sink_ptr> sinks;
     const uint32_t megabyte = 1048576;
@@ -82,6 +82,8 @@ CustomBadgeManager::CustomBadgeManager(){
     auto logger = std::make_shared<spdlog::logger>("CustomBadges", sinks.begin(), sinks.end());
     spdlog::set_default_logger(logger);
 
+    ProfilePage::hookInit();
+    CommentCell::hookInit();
 }
 
 

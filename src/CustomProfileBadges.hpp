@@ -14,7 +14,7 @@
 class PROFILEBADGES_API CustomBadgeManager{
 private:
     std::unordered_map<int, std::string> _idToSpriteDict;
-    CustomBadgeManager()=default;    
+    CustomBadgeManager();    
 public:
     
     CustomBadgeManager(const CustomBadgeManager&)=delete;
