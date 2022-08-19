@@ -49,6 +49,10 @@ void CustomBadgeManager::removeAllSpriteMappings(){
     spdlog::debug("Removed all of the custom id to badge sprite mappings");
 }
 
+bool CustomBadgeManager::idIsMappedToSprite(int badgeId){
+    std::lock_guard<std::mutex> guard(gMutex);
+    return _idToSpriteDict.find(badgeId) != std::end(_idToSpriteDict);
+}
 
 std::string CustomBadgeManager::convertIdToSpriteName(int badgeId){
     try{

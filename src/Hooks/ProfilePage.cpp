@@ -1,4 +1,5 @@
 #include "ProfilePage.hpp"
+#include "ReplacementLogic.hpp"
 #include <matdash.hpp>
 #include <matdash/minhook.hpp>
 #include <Windows.h>
@@ -31,14 +32,21 @@ void ProfilePage::loadPageFromUserInfo(GJUserScore* userScore){
     using namespace std::string_literals;
     using namespace cocos2d;
     matdash::orig<&ProfilePage::loadPageFromUserInfo, matdash::CallConv::Thiscall>(this, userScore);
-    
+    if(shouldRenderBadgeNormally(userScore->m_modBadgeValue)) {
+        spdlog::debug("Handled profile badge sprite creation using the game's default implementation. badgeID={}", userScore->m_modBadgeValue);
+        return; 
+    }
+
     try{
-        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(CustomBadgeManager::get().convertIdToSpriteName(userScore->m_modBadgeValue).c_str());
+        std::string newBadgeSpriteName = CustomBadgeManager::get().convertIdToSpriteName(userScore->m_modBadgeValue);
+        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(newBadgeSpriteName.c_str());
         if(CCSprite* originalModBadge = getModBadgeSprite()) originalModBadge->removeFromParent(); //Delete the original badge    
         CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(0));
         newBadge->setPosition(getModBadgePosition());
         root->addChild(newBadge, 10);
+        spdlog::debug("Succesfully remapped badge id '{}' to sprite '{}'", userScore->m_modBadgeValue, newBadgeSpriteName);
     }catch(const std::out_of_range& ex){
+        spdlog::error("loadPageFromUserInfo error: {}", ex.what());
         //Handle the exception and do nothing
     }
 }

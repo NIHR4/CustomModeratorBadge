@@ -1,4 +1,5 @@
 #include "CommentCell.hpp"
+#include "ReplacementLogic.hpp"
 #include <matdash.hpp>
 #include <matdash/minhook.hpp>
 #include <spdlog/spdlog.h>
@@ -21,16 +22,17 @@ CCSprite* CommentCell::getModBadgeSprite(){
 
 void CommentCell::loadFromComment(GJComment* comment){
     
-    if(comment->m_modBadgeValue == 0){
+    if(shouldRenderBadgeNormally(comment->m_modBadgeValue)){
         matdash::orig<&CommentCell::loadFromComment, matdash::CallConv::Thiscall>(this, comment);
-        spdlog::trace("User does not have a mod badge");
+        spdlog::debug("Handled profile badge sprite creation using the game's default implementation. badgeID={}", comment->m_modBadgeValue);
         return;
     }
     
     int realBadgeValue = comment->m_modBadgeValue;
     comment->m_modBadgeValue = 1;
     matdash::orig<&CommentCell::loadFromComment, matdash::CallConv::Thiscall>(this, comment); //force the badge to spawn
-    
+    comment->m_modBadgeValue = realBadgeValue;
+
     CCSprite* originalBadge = getModBadgeSprite();
     if(originalBadge == nullptr){
         spdlog::warn("With a badgeID of value {} a custom badge should have been generated but the program was unable to replace the existing badge", realBadgeValue);
@@ -38,15 +40,18 @@ void CommentCell::loadFromComment(GJComment* comment){
     }
 
     try{
+        std::string newBadgeSpriteName = CustomBadgeManager::get().convertIdToSpriteName(realBadgeValue);
         CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(1));
         spdlog::trace("User has a modBadge={}", realBadgeValue);
-        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(CustomBadgeManager::get().convertIdToSpriteName(realBadgeValue).c_str());
+        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(newBadgeSpriteName.c_str());
         CCPoint originalPosition = originalBadge->getPosition();
         originalBadge->removeFromParent();
         newBadge->setPosition(originalPosition);
         root->addChild(newBadge,10);
+        spdlog::debug("Succesfully remapped badge id '{}' to sprite '{}'", realBadgeValue, newBadgeSpriteName);
     }catch(const std::out_of_range& ex){
         //Handle the exception and do nothing
+        spdlog::error("loadFromComment error: {}", ex.what());
     }
         
 }

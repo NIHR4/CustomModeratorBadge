@@ -23,6 +23,8 @@ public:
     bool mapBadgeIdToSprite(int badgeId, const std::string& spriteName);
     bool removeSpriteMapping(int badgeId);
     void removeAllSpriteMappings();
+    bool idIsMappedToSprite(int badgeId);
+    
     std::string convertIdToSpriteName(int badgeId);
     
     void setDebugMode(bool debugEnabled);
