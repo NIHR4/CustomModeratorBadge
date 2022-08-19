@@ -2,6 +2,7 @@
 #include <matdash.hpp>
 #include <matdash/minhook.hpp>
 #include <spdlog/spdlog.h>
+#include "../CustomProfileBadges.hpp"
 using namespace cocos2d;
 
 CCSprite* CommentCell::getModBadgeSprite(){
@@ -29,20 +30,25 @@ void CommentCell::loadFromComment(GJComment* comment){
     int realBadgeValue = comment->m_modBadgeValue;
     comment->m_modBadgeValue = 1;
     matdash::orig<&CommentCell::loadFromComment, matdash::CallConv::Thiscall>(this, comment); //force the badge to spawn
-    if(auto p = getModBadgeSprite()){
-        CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(1));
-        spdlog::trace("User has a modBadge={}", realBadgeValue);
-        auto originalPosition = p->getPosition();
-        p->removeFromParent();
-        auto newBadge = CCSprite::createWithSpriteFrameName("modBadge_01_001.png");
-        newBadge->setPosition(originalPosition);
-        root->addChild(newBadge,10);
-    }else{
-        spdlog::warn("Could not locate the mod badge inside the comment cell.");
+    
+    CCSprite* originalBadge = getModBadgeSprite();
+    if(originalBadge == nullptr){
+        spdlog::warn("With a badgeID of value {} a custom badge should have been generated but the program was unable to replace the existing badge", realBadgeValue);
+        return;
     }
 
-
-
+    try{
+        CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(1));
+        spdlog::trace("User has a modBadge={}", realBadgeValue);
+        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(CustomBadgeManager::get().convertIdToSpriteName(realBadgeValue).c_str());
+        CCPoint originalPosition = originalBadge->getPosition();
+        originalBadge->removeFromParent();
+        newBadge->setPosition(originalPosition);
+        root->addChild(newBadge,10);
+    }catch(const std::out_of_range& ex){
+        //Handle the exception and do nothing
+    }
+        
 }
 
 bool CommentCell::hookInit(){

@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <string>
 #include <spdlog/spdlog.h>
-
+#include "../CustomProfileBadges.hpp"
 using namespace cocos2d;
 
 cocos2d::CCSprite* ProfilePage::getModBadgeSprite(){
@@ -31,14 +31,16 @@ void ProfilePage::loadPageFromUserInfo(GJUserScore* userScore){
     using namespace std::string_literals;
     using namespace cocos2d;
     matdash::orig<&ProfilePage::loadPageFromUserInfo, matdash::CallConv::Thiscall>(this, userScore);
-    if(auto originalModBadge = getModBadgeSprite()) originalModBadge->removeFromParent(); //Delete the original badge    
     
-    //test code
-    CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(0));
-    auto newBadge = CCSprite::createWithSpriteFrameName("modBadge_01_001.png");
-    root->addChild(newBadge, 10);
-    newBadge->setPosition(getModBadgePosition());
-    //MessageBoxA(NULL,  ("Badge ID: "s + std::to_string(userScore->m_modBadgeValue)).c_str(), "ProfileBadge", MB_OK);
+    try{
+        CCSprite* newBadge = CCSprite::createWithSpriteFrameName(CustomBadgeManager::get().convertIdToSpriteName(userScore->m_modBadgeValue).c_str());
+        if(CCSprite* originalModBadge = getModBadgeSprite()) originalModBadge->removeFromParent(); //Delete the original badge    
+        CCLayer* root = reinterpret_cast<CCLayer*>(this->getChildren()->objectAtIndex(0));
+        newBadge->setPosition(getModBadgePosition());
+        root->addChild(newBadge, 10);
+    }catch(const std::out_of_range& ex){
+        //Handle the exception and do nothing
+    }
 }
 
 bool ProfilePage::hookInit(){
