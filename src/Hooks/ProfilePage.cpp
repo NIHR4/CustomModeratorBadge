@@ -3,7 +3,6 @@
 #include <matdash/minhook.hpp>
 #include <Windows.h>
 #include <string>
-#include <cocos2d.h>
 #include <spdlog/spdlog.h>
 
 using namespace cocos2d;
