@@ -16,7 +16,7 @@ add_library(ProfileBadges SHARED ${SOURCE_FILES})
 
 #Git submodules
 add_subdirectory(deps/matdash)
-
+add_subdirectory(deps/cocos-headers)
 
 #Linking
 target_link_libraries(ProfileBadges PRIVATE 
@@ -24,4 +24,5 @@ target_link_libraries(ProfileBadges PRIVATE
     spdlog::spdlog spdlog::spdlog_header_only
     xxHash::xxhash
     mat-dash
+    cocos2d
 )

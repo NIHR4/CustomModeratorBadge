@@ -4,8 +4,15 @@
 
 
 
+#include <spdlog/spdlog.h>
+
 DWORD WINAPI modThread(void* hModule){
+    AllocConsole();
+    freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
+    freopen_s(reinterpret_cast<FILE**>(stdin), "CONIN$", "r", stdin);
+    spdlog::set_level(spdlog::level::trace);
     ProfilePage::hookInit();
+    
     return 0;
 }
 
