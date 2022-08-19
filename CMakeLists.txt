@@ -12,7 +12,6 @@ find_package(xxHash CONFIG REQUIRED)
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 
 add_library(ProfileBadges SHARED ${SOURCE_FILES})
-#add_executable(ProfileBadges ${SOURCE_FILES})
 
 #Git submodules
 add_subdirectory(deps/matdash)
