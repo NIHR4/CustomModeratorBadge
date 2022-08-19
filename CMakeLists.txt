@@ -6,7 +6,6 @@ project(ProfileBadges VERSION 0.1.0)
 #Packages
 find_package(minhook CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(xxHash CONFIG REQUIRED)
 
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
@@ -21,7 +20,6 @@ add_subdirectory(deps/cocos-headers)
 target_link_libraries(ProfileBadges PRIVATE 
     minhook::minhook
     spdlog::spdlog spdlog::spdlog_header_only
-    xxHash::xxhash
     mat-dash
     cocos2d
 )

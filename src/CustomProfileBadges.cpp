@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Safety/MemoryTest.hpp"
 #include "Hooks/ProfilePage.hpp"
 #include "Hooks/CommentCell.hpp"
 #include "CustomProfileBadges.hpp"
