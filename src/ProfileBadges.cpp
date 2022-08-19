@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Safety/MemoryTest.hpp"
 #include "Hooks/ProfilePage.hpp"
-
+#include "Hooks/CommentCell.hpp"
 
 
 #include <spdlog/spdlog.h>
@@ -12,7 +12,7 @@ DWORD WINAPI modThread(void* hModule){
     freopen_s(reinterpret_cast<FILE**>(stdin), "CONIN$", "r", stdin);
     spdlog::set_level(spdlog::level::trace);
     ProfilePage::hookInit();
-    
+    CommentCell::hookInit();
     return 0;
 }
 
