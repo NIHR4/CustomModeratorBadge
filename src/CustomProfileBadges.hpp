@@ -11,19 +11,19 @@
 #include <string>
 #include <unordered_map>
 
-class PROFILEBADGES_API CustomBadgeManager{
+class CustomBadgeManager{
 private:
     std::unordered_map<int, std::string> _idToSpriteDict;
     CustomBadgeManager();    
 public:
     
-    CustomBadgeManager(const CustomBadgeManager&)=delete;
-    CustomBadgeManager(const CustomBadgeManager&&)=delete;
+    PROFILEBADGES_API CustomBadgeManager(const CustomBadgeManager&)=delete;
+    PROFILEBADGES_API CustomBadgeManager(const CustomBadgeManager&&)=delete;
     
     /*
     Singleton getter method
     */
-    static CustomBadgeManager& get();
+    PROFILEBADGES_API static CustomBadgeManager& get();
     
     
     
@@ -40,7 +40,7 @@ public:
     FALSE if the badgeId was not mapped to a custom sprite because the sprite wasn't loaded into the game's memory
     or because the badgeId is equal to a reserved value, such is the case of the value '0'
     */ 
-    bool mapBadgeIdToSprite(int badgeId, const std::string& spriteName);
+    PROFILEBADGES_API bool mapBadgeIdToSprite(int badgeId, const std::string& spriteName);
     
     
     /*
@@ -51,7 +51,7 @@ public:
     TRUE in case the badge ID was unmapped from the custom sprite.
     FALSE if the badge ID was not mapped to any sprites in the first place
     */
-    bool removeSpriteMapping(int badgeId);
+    PROFILEBADGES_API bool removeSpriteMapping(int badgeId);
     
     
     /*
@@ -62,13 +62,13 @@ public:
     TRUE if the badge ID has a custom sprite assigned to it
     FALSE if the badge ID does not has a custom sprite assigned to it
     */
-    bool idIsMappedToSprite(int badgeId);
+    PROFILEBADGES_API bool idIsMappedToSprite(int badgeId);
 
 
     /*
     Removes ALL custom mod badges from the game.
     */
-    void removeAllSpriteMappings();
+    PROFILEBADGES_API void removeAllSpriteMappings();
     
     
     /*
@@ -79,7 +79,7 @@ public:
     Returns a string which contains the name of the sprite that will be displayed when Geomtry Dash encounters users 
     with a modBadgeLevel equal to that of the badgeId parameter
     */
-    std::string convertIdToSpriteName(int badgeId);
+    PROFILEBADGES_API std::string convertIdToSpriteName(int badgeId);
     
     
     /*
@@ -87,7 +87,7 @@ public:
     //Paramters:
     [in, debugEnabled]: Setting this to TRUE will enable extra logging, while setting it to FALSE will disable this extra logging
     */
-    void setDebugMode(bool debugEnabled);
+    PROFILEBADGES_API void setDebugMode(bool debugEnabled);
 
     
 };
